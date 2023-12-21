@@ -8,5 +8,6 @@ pub mod cubebag;
 pub mod gear_ratios;
 pub mod haunted_wasteland;
 pub mod oasis;
+pub mod pipe_maze;
 pub mod scratch_cards;
 pub mod trebuchet;
