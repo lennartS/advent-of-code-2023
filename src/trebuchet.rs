@@ -99,9 +99,9 @@ pub fn preprocess(lines: Vec<String>) -> Vec<String> {
     result
 }
 
-pub fn count(lines: &Vec<String>) -> Result<u32> {
+pub fn count(lines: &[String]) -> Result<u32> {
     let mut numbers: Vec<u32> = vec![];
-    for mut line in lines.clone() {
+    for mut line in lines.iter().cloned() {
         line.retain(|c| c.is_ascii_digit());
         let first_nb = line.chars().next().unwrap().to_digit(10).unwrap();
         let second_nb = line.chars().last().unwrap().to_digit(10).unwrap();

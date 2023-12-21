@@ -41,7 +41,7 @@ pub fn total(cards: &Vec<Card>) -> i32 {
         let old = &card_count[card_idx + 1..card_idx + card.matches() + 1];
         let new = old
             .iter()
-            .map(|c| c + 1 * &card_count[card_idx])
+            .map(|c| c + card_count[card_idx])
             .collect::<Vec<_>>();
         card_count.splice(card_idx + 1..card_idx + card.matches() + 1, new);
     }
@@ -53,24 +53,22 @@ pub fn parse(lines: &Vec<String>) -> Result<Vec<Card>> {
     let mut cards: Vec<Card> = vec![];
     for line in lines {
         let numbers = line
-            .split(":")
+            .split(':')
             .last()
             .context("Nothing behind colon")?
-            .split("|")
+            .split('|')
             .collect::<Vec<_>>();
         let goals: Vec<i32> = numbers
             .first()
             .context("No pipe found")?
-            .split(" ")
-            .filter(|s| !s.is_empty())
-            .map(|g| g.parse::<i32>().expect("Couldn't parse goal number"))
+            .split(' ')
+            .filter_map(|g| g.parse::<i32>().ok())
             .collect();
         let actuals: Vec<i32> = numbers
             .last()
             .context("No pipe found")?
-            .split(" ")
-            .filter(|s| !s.is_empty())
-            .map(|a| a.parse::<i32>().expect("Couldn't parse actual number"))
+            .split(' ')
+            .filter_map(|a| a.parse::<i32>().ok())
             .collect();
         cards.push(Card::new(goals, actuals));
     }

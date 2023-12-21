@@ -5,7 +5,7 @@
 
 use anyhow::{Context, Ok, Result};
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default)]
 pub struct CubeSet {
     pub red: Option<i32>,
     pub blue: Option<i32>,
@@ -19,14 +19,6 @@ pub struct Game {
 }
 
 impl CubeSet {
-    pub fn new() -> CubeSet {
-        CubeSet {
-            red: None,
-            blue: None,
-            green: None,
-        }
-    }
-
     pub fn new_part1() -> CubeSet {
         CubeSet {
             red: Some(12),
@@ -106,20 +98,20 @@ impl Game {
 pub fn parse(lines: &Vec<String>) -> Result<Vec<Game>> {
     let mut result = vec![];
     for line in lines {
-        let colon = line.split(":");
+        let colon = line.split(':');
         let id = colon
             .clone()
             .next()
             .context("prefix before colon not found")?
-            .split(" ")
+            .split(' ')
             .last()
             .context("game id not found")?
             .parse::<i32>()?;
         let mut game = Game::new(id);
-        for full_draw in colon.last().context("draw not found")?.split(";") {
-            let mut set = CubeSet::new();
-            for cube in full_draw.split(",") {
-                let mut nb_color = cube.trim().split(" ");
+        for full_draw in colon.last().context("draw not found")?.split(';') {
+            let mut set = CubeSet::default();
+            for cube in full_draw.split(',') {
+                let mut nb_color = cube.trim().split(' ');
                 let nb = nb_color.next().context("no number found")?.parse::<i32>()?;
                 let color = nb_color.last();
                 match color {

@@ -45,7 +45,7 @@ impl Schematic {
                     if let Some(line_window) = self.lines.get(line) {
                         if let Some(cha) = line_window.get(column..column + 1) {
                             if cha.parse::<i32>().is_ok() {
-                                result.push((Location { line: line, column }, loc.clone()));
+                                result.push((Location { line, column }, loc.clone()));
                             }
                         }
                     }
@@ -139,7 +139,7 @@ impl Schematic {
                         }
                     }
                 } else {
-                    front = front + 1;
+                    front += 1;
                     continue_growing = false;
                 }
             }
@@ -169,7 +169,7 @@ impl Schematic {
                         break;
                     }
                 } else {
-                    back = back - 1;
+                    back -= 1;
                     continue_growing = false;
                 }
             }
@@ -194,7 +194,7 @@ impl Schematic {
             .expect("invalid span given")
     }
 
-    pub fn get_gears(&self, part_numbers: &Vec<PartNumberSpan>) -> Result<Vec<Location>> {
+    pub fn get_gears(&self, part_numbers: &[PartNumberSpan]) -> Result<Vec<Location>> {
         let gear_candidates: Vec<Location> = self
             .symbols
             .iter()
@@ -208,9 +208,8 @@ impl Schematic {
                     == "*"
             })
             .collect::<Vec<Location>>()
-            .iter()
-            .map(|cand| cand.clone())
-            .collect::<Vec<Location>>();
+            .to_vec();
+        //.iter().cloned().collect::<Vec<_>>();
 
         let gears = gear_candidates
             .iter()
@@ -223,18 +222,17 @@ impl Schematic {
                     .len()
                     == 2
             })
-            .collect::<Vec<_>>()
-            .clone();
+            .collect::<Vec<_>>();
 
         Ok(gears)
     }
 }
 
-pub fn parse(lines: &Vec<String>) -> Result<Schematic> {
+pub fn parse(lines: &[String]) -> Result<Schematic> {
     let mut symbs: Vec<Location> = vec![];
-    for line_nb in 0..lines.len() {
+    for (line_nb, _) in lines.iter().enumerate() {
         for (idx, cha) in lines[line_nb].char_indices() {
-            if !(cha.is_digit(10) || cha == '.') {
+            if !(cha.is_ascii_digit() || cha == '.') {
                 symbs.push(Location {
                     line: line_nb,
                     column: idx,
@@ -244,7 +242,7 @@ pub fn parse(lines: &Vec<String>) -> Result<Schematic> {
     }
 
     Ok(Schematic {
-        lines: lines.clone(),
+        lines: lines.to_owned(),
         symbols: symbs.clone(),
     })
 }
