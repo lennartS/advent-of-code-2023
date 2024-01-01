@@ -4,9 +4,11 @@
 pub mod almanac;
 pub mod boat_race;
 pub mod camel_cards;
+pub mod cosmic_expansion;
 pub mod cubebag;
 pub mod gear_ratios;
 pub mod haunted_wasteland;
+pub mod hot_springs;
 pub mod oasis;
 pub mod pipe_maze;
 pub mod scratch_cards;
